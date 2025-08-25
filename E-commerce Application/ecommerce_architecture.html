@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-commerce Checkout System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .architecture-diagram {
+            width: 100%;
+            height: 600px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            position: relative;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            overflow: hidden;
+        }
+        
+        .component {
+            position: absolute;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 11px;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .component:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .frontend { background: #e74c3c; }
+        .api-gateway { background: #9b59b6; }
+        .auth { background: #f39c12; }
+        .catalog { background: #27ae60; }
+        .cart { background: #3498db; }
+        .payment { background: #e67e22; }
+        .order { background: #34495e; }
+        .inventory { background: #16a085; }
+        .notification { background: #8e44ad; }
+        .database { background: #7f8c8d; }
+        .external { background: #c0392b; }
+        
+        .arrow {
+            position: absolute;
+            background: #2c3e50;
+            z-index: 1;
+        }
+        
+        .arrow-horizontal {
+            height: 2px;
+        }
+        
+        .arrow-vertical {
+            width: 2px;
+        }
+        
+        .arrow-head {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+        
+        .arrow-right {
+            border-left: 8px solid #2c3e50;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+        }
+        
+        .arrow-down {
+            border-top: 8px solid #2c3e50;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+        }
+        
+        .data-flow {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.9);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            font-size: 12px;
+            max-width: 300px;
+        }
+        
+        .legend {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.9);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #e74c3c;
+            font-size: 11px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            margin-right: 8px;
+        }
+        
+        .security-zones {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+        
+        .dmz {
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            right: 50px;
+            height: 120px;
+            border: 2px dashed #e74c3c;
+            background: rgba(231, 76, 60, 0.05);
+            border-radius: 8px;
+        }
+        
+        .dmz-label {
+            position: absolute;
+            top: -15px;
+            left: 10px;
+            background: white;
+            padding: 2px 8px;
+            font-size: 10px;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .internal-network {
+            position: absolute;
+            top: 200px;
+            left: 50px;
+            right: 50px;
+            bottom: 140px;
+            border: 2px dashed #27ae60;
+            background: rgba(39, 174, 96, 0.05);
+            border-radius: 8px;
+        }
+        
+        .internal-label {
+            position: absolute;
+            top: -15px;
+            left: 10px;
+            background: white;
+            padding: 2px 8px;
+            font-size: 10px;
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .scenario-details {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .business-context {
+            background: #fff3cd;
+            border-left: 4px solid #f39c12;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        
+        .threat-surface {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .threat-category {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .threat-category h4 {
+            margin-top: 0;
+            color: #e74c3c;
+        }
+        
+        .threat-category ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .threat-category li {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛒 E-commerce Checkout System</h1>
+        
+        <div class="business-context">
+            <strong>Business Context:</strong> Mid-size online retailer processing 10K orders/day, handling credit cards, inventory management, and customer data. Peak traffic during sales events (Black Friday). International customers, multiple payment methods.
+        </div>
+        
+        <div class="architecture-diagram">
+            <!-- Security Zones -->
+            <div class="security-zones">
+                <div class="dmz">
+                    <div class="dmz-label">DMZ / Public Zone</div>
+                </div>
+                <div class="internal-network">
+                    <div class="internal-label">Internal Network / Private Zone</div>
+                </div>
+            </div>
+            
+            <!-- Frontend Layer -->
+            <div class="component frontend" style="top: 80px; left: 80px; width: 100px;">
+                Web Frontend<br>
+                <small>React SPA</small>
+            </div>
+            
+            <div class="component frontend" style="top: 80px; left: 200px; width: 100px;">
+                Mobile App<br>
+                <small>iOS/Android</small>
+            </div>
+            
+            <!-- API Gateway -->
+            <div class="component api-gateway" style="top: 80px; left: 450px; width: 120px;">
+                API Gateway<br>
+                <small>Rate Limiting</small>
+            </div>
+            
+            <!-- Load Balancer -->
+            <div class="component api-gateway" style="top: 80px; left: 600px; width: 100px;">
+                Load Balancer<br>
+                <small>HAProxy</small>
+            </div>
+            
+            <!-- Microservices Layer -->
+            <div class="component auth" style="top: 230px; left: 80px; width: 90px;">
+                Auth Service<br>
+                <small>JWT/OAuth</small>
+            </div>
+            
+            <div class="component catalog" style="top: 230px; left: 190px; width: 90px;">
+                Catalog Service<br>
+                <small>Products</small>
+            </div>
+            
+            <div class="component cart" style="top: 230px; left: 300px; width: 90px;">
+                Cart Service<br>
+                <small>Session Mgmt</small>
+            </div>
+            
+            <div class="component payment" style="top: 230px; left: 410px; width: 90px;">
+                Payment Service<br>
+                <small>PCI Compliant</small>
+            </div>
+            
+            <div class="component order" style="top: 230px; left: 520px; width: 90px;">
+                Order Service<br>
+                <small>Orchestration</small>
+            </div>
+            
+            <div class="component inventory" style="top: 230px; left: 630px; width: 90px;">
+                Inventory Service<br>
+                <small>Stock Mgmt</small>
+            </div>
+            
+            <div class="component notification" style="top: 230px; left: 740px; width: 90px;">
+                Notification<br>
+                <small>Email/SMS</small>
+            </div>
+            
+            <!-- Data Layer -->
+            <div class="component database" style="top: 380px; left: 120px; width: 100px;">
+                User DB<br>
+                <small>PostgreSQL</small>
+            </div>
+            
+            <div class="component database" style="top: 380px; left: 250px; width: 100px;">
+                Product DB<br>
+                <small>MongoDB</small>
+            </div>
+            
+            <div class="component database" style="top: 380px; left: 380px; width: 100px;">
+                Order DB<br>
+                <small>PostgreSQL</small>
+            </div>
+            
+            <div class="component database" style="top: 380px; left: 510px; width: 100px;">
+                Cache Layer<br>
+                <small>Redis</small>
+            </div>
+            
+            <div class="component database" style="top: 380px; left: 640px; width: 100px;">
+                Analytics DB<br>
+                <small>ClickHouse</small>
+            </div>
+            
+            <!-- External Services -->
+            <div class="component external" style="top: 500px; left: 150px; width: 120px;">
+                Payment Gateway<br>
+                <small>Stripe/PayPal</small>
+            </div>
+            
+            <div class="component external" style="top: 500px; left: 300px; width: 120px;">
+                Shipping Provider<br>
+                <small>FedEx/UPS</small>
+            </div>
+            
+            <div class="component external" style="top: 500px; left: 450px; width: 120px;">
+                Email Provider<br>
+                <small>SendGrid</small>
+            </div>
+            
+            <div class="component external" style="top: 500px; left: 600px; width: 120px;">
+                Fraud Detection<br>
+                <small>Third-party</small>
+            </div>
+            
+            <!-- Arrows -->
+            <div class="arrow arrow-horizontal" style="top: 95px; left: 320px; width: 110px;"></div>
+            <div class="arrow-head arrow-right" style="top: 91px; left: 426px;"></div>
+            
+            <div class="arrow arrow-horizontal" style="top: 95px; left: 580px; width: 50px;"></div>
+            <div class="arrow-head arrow-right" style="top: 91px; left: 626px;"></div>
+            
+            <div class="arrow arrow-vertical" style="top: 190px; left: 510px; height: 40px;"></div>
+            <div class="arrow-head arrow-down" style="top: 226px; left: 506px;"></div>
+            
+            <!-- Legend -->
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color frontend"></div>
+                    <span>Frontend/Client</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color api-gateway"></div>
+                    <span>Gateway/Proxy</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color auth"></div>
+                    <span>Microservices</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color database"></div>
+                    <span>Data Storage</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color external"></div>
+                    <span>External APIs</span>
+                </div>
+            </div>
+            
+            <!-- Data Flow -->
+            <div class="data-flow">
+                <strong>Request Flow:</strong><br>
+                1. Internet → Load Balancer (SSL termination)<br>
+                2. Load Balancer → API Gateway (auth/routing)<br>
+                3. API Gateway → Microservice<br>
+                4. Microservice → Database<br>
+                <br>
+                <strong>Why Both?</strong><br>
+                • LB: HA, SSL offload, DDoS protection<br>
+                • API GW: Auth, rate limiting, routing logic
+            </div>
+        </div>
+        
+        <div class="scenario-details">
+            <h3>🎯 Your Security Challenge</h3>
+            <p><strong>Scenario:</strong> You're the new Security Architect. The CTO wants a comprehensive security assessment of this checkout system. Customer PII was recently exposed in a competitor breach, and the board is demanding action.</p>
+            
+            <h4>Key Business Requirements:</h4>
+            <ul>
+                <li><strong>Availability:</strong> 99.9% uptime (downtime costs $10K/minute)</li>
+                <li><strong>Compliance:</strong> PCI DSS Level 1, GDPR, CCPA</li>
+                <li><strong>Performance:</strong> Checkout must complete &lt;3 seconds</li>
+                <li><strong>Scale:</strong> Handle 5x traffic spikes during sales</li>
+                <li><strong>Trust:</strong> Zero tolerance for payment data breaches</li>
+            </ul>
+            
+            <div class="threat-surface">
+                <div class="threat-category">
+                    <h4>🎭 High-Value Targets</h4>
+                    <ul>
+                        <li>Payment processing flow</li>
+                        <li>Customer PII database</li>
+                        <li>Authentication tokens</li>
+                        <li>Admin interfaces</li>
+                        <li>API endpoints</li>
+                    </ul>
+                </div>
+                
+                <div class="threat-category">
+                    <h4>⚡ Attack Vectors</h4>
+                    <ul>
+                        <li>API abuse & injection</li>
+                        <li>Authentication bypass</li>
+                        <li>Payment manipulation</li>
+                        <li>Data exfiltration</li>
+                        <li>DDoS during peak sales</li>
+                    </ul>
+                </div>
+                
+                <div class="threat-category">
+                    <h4>🔐 Trust Boundaries</h4>
+                    <ul>
+                        <li>Internet ↔ DMZ</li>
+                        <li>DMZ ↔ Internal services</li>
+                        <li>Services ↔ Databases</li>
+                        <li>Internal ↔ External APIs</li>
+                        <li>User sessions ↔ Backend</li>
+                    </ul>
+                </div>
+                
+                <div class="threat-category">
+                    <h4>📊 Compliance Scope</h4>
+                    <ul>
+                        <li>Card data handling (PCI)</li>
+                        <li>EU customer data (GDPR)</li>
+                        <li>CA resident data (CCPA)</li>
+                        <li>Audit logging requirements</li>
+                        <li>Data retention policies</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add interactivity to components
+        document.querySelectorAll('.component').forEach(component => {
+            component.addEventListener('click', function() {
+                const rect = this.getBoundingClientRect();
+                const tooltip = document.createElement('div');
+                tooltip.style.cssText = `
+                    position: fixed;
+                    top: ${rect.top - 40}px;
+                    left: ${rect.left}px;
+                    background: #2c3e50;
+                    color: white;
+                    padding: 8px 12px;
+                    border-radius: 4px;
+                    font-size: 12px;
+                    z-index: 1000;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                `;
+                tooltip.textContent = 'Click to analyze security concerns';
+                document.body.appendChild(tooltip);
+                
+                setTimeout(() => {
+                    document.body.removeChild(tooltip);
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>
